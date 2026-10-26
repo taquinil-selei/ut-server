@@ -18,12 +18,12 @@ Railway nepřichází v úvahu. Fly.io jde, ale je složitější a levnější 
 
 | Požadavek | Detail | Zdroj / ověření |
 |---|---|---|
-| Příchozí UDP | hra 7777, dotazy 7778 (hra+1) a 7787 (hra+10, GameSpy dotaz) | návody a README image PhasecoreX, **v běhu neověřeno** |
-| Odchozí TCP 28902 | spojení na master servery | `Default.ini` patche (ověřeno) |
+| Příchozí UDP | hra 7777, dotazy 7778 (hra+1) a 7787 (hra+10, GameSpy dotaz) | návody a README image PhasecoreX. Na běžícím serveru poslouchá 7777, 7778, 7787 a 10777 (LAN, ufw ho neotevírá); přístup zvenku neověřen |
+| Odchozí TCP 28902 | spojení na master servery | `Default.ini` patche, na běžícím serveru navázáno spojení se všemi 6 master servery (ověřeno) |
 | Volitelně TCP 8075 | WebAdmin, ve výchozím stavu vypnutý, doporučuji SSH tunel | ověřeno v ini |
 | CPU | engine je prakticky jednovláknový, stačí 1–2 sdílená jádra | odhad, neměřeno |
 | RAM | 1–2 GB je s rezervou | odhad, neměřeno |
-| Disk | obsah hry ~6 GB, na CX23 je 40 GB | velikost z Steam/GOG (ověřeno), zbytek odhad |
+| Disk | obsah hry 5,7 GB, na CX23 i CPX12 je 40 GB | 5,7 GB změřeno na serveru (ověřeno) |
 | Binárky | patch 3374 má nativní amd64, ARM64 i ppc64le, nepotřebuje 32bit knihovny | ověřeno (obsah tarballu) |
 
 Přesný seznam portů zjistíš po prvním startu příkazem `ss -ulpn | grep ucc`. Steam diskuse
@@ -88,6 +88,8 @@ zóně a za stejnou cenu. Z Česka je blíž Německo.
 **Postup v konzoli** (názvy tlačítek jsou z dokumentace přes vyhledávač, ne z živé konzole):
 Security > SSH Keys > přidej veřejný klíč. Servers > Add server > lokace, image Ubuntu 24.04,
 typ, IPv4/IPv6, vyber SSH klíč, do „Cloud config" vlož `deploy/hetzner-cloud-init.yaml`, název.
+**Před potvrzením zkontroluj, že pole „Cloud config" není prázdné:** při prvním nasazení server
+cloud-config nedostal a Docker na něm nebyl (záloha: `docs/handoff-deploy.md`, krok 0b).
 SSH klíč se dá přidat jen při vytvoření serveru, dodatečně přes rescue systém. Alternativa
 je image `docker-ce` (Ubuntu 24.04 s Dockerem), ale cloud-init v repu instaluje Docker sám.
 První připojení: `ssh root@<IP>`, potvrď otisk klíče.
@@ -148,7 +150,9 @@ Zdroje: [OldUnreal README](https://github.com/OldUnreal/UT2004Patches),
 - Linuxová binárka 3374 čte klíč ze souboru `cdkey` (OldUnreal issue #35). Adresář (`System/`
   vs. `~/.ut2004/System/`) a formát obsahu nejsou nikde potvrzené: image PhasecoreX (3369)
   zapisuje `"CDKey"="<hodnota>"`, jiný návod holý klíč.
-- Zda 3374 server bez souboru `cdkey` nastartuje a uplinkuje, nikdo nezdokumentoval.
+- Zda 3374 server bez souboru `cdkey` nastartuje a uplinkuje, nikdo nezdokumentoval. **První
+  nasazení:** server bez `cdkey` nastartoval a navázal TCP spojení na port 28902 se všemi
+  šesti master servery, v logu o klíči nic není. Že se server objevil v seznamu, nikdo neověřil.
   U 333networks, gonespy, errorist, frag-net a noccer.de žádný zdroj o kontrole klíčů nic neříká.
 - Z patche: 3374 si automaticky detekuje GOG klíč a nahradí ho jedinečným.
 

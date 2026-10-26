@@ -35,12 +35,16 @@ omezuje nové zákazníky, viz [docs/hosting-options.md](docs/hosting-options.md
 
 ## Co je ověřeno a co ne
 
+Ověřeno na skutečném serveru (Hetzner CPX12, Ubuntu 24.04, podle `docs/deploy-status.md`): sestavení
+image, instalátor OldUnreal (po doinstalování `lbzip2`), 13 z 13 bonus map, server běží, `04-verify.sh`
+skončil `RESULT: PASS`, UDP 7777, 7778, 7787 poslouchají a TCP spojení na 6 master serverů je navázáno.
+
 Ověřeno lokálně (Debian bookworm, x86_64): patch 3374 se stáhne a odpovídá pinovanému
 sha256, server se bez displeje spustí a načte všechny enginové balíčky, entrypoint
 správně instaluje patch, přejmenuje Steam `maps` na `Maps`, zapisuje ini (včetně CRLF
 a speciálních znaků v heslech) a odmítne neúplný obsah nebo cizí `System`.
 
-**Neověřeno:** běh s opravdovým herním obsahem (ten tu nebyl), instalátor OldUnreal
-a nahrání obsahu, zápis do seznamu serverů OpenSpy a to, zda server vyžaduje CD key,
-`apt` vrstva Dockerfile (sandbox neviděl deb.debian.org), cloud-init a samotné nasazení
-na Hetzner (včetně toho, zda se nový účet vůbec dostane k objednávce).
+**Neověřeno:** připojení ze hry zvenku, zápis do seznamu serverů (OpenSpy a další) a to, zda
+seznam vyžaduje CD key (server bez klíče nastartoval a uplinkuje), nahrání obsahu z vlastní
+Steam/GOG kopie (cesta B) a to, že cloud-init skutečně doběhne (při prvním nasazení
+server cloud-config nedostal, viz krok 0b v `docs/handoff-deploy.md`).

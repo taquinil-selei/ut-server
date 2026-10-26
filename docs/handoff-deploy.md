@@ -43,7 +43,8 @@ Na serveru jsou čtyři skripty v `deploy/server/`. Každý vypíše řádky `PA
   změny `ufw`, další otevřené porty, **žádná odchozí pravidla firewallu** (shodila by
   spojení na master servery), nic v Hetzner Console, nemaž server, **neinstaluj žádný
   software na PC** a **neupravuj skripty na serveru**. Skript, který selhává, může mít chybu:
-  nahlas doslovný výstup.
+  nahlas doslovný výstup. Jediná výjimka je záložní příprava serveru v kroku 0b a jen s
+  výslovným souhlasem uživatele.
 - `rm -rf` jen to, co dělají samotné skripty.
 - Příkazy `ssh`/`scp` vždy s `-o BatchMode=yes` (je v `$sshOpts`). Když přihlášení selže
   (`Permission denied`, klíč s passphrase), nebo ssh hlásí **změněný otisk klíče serveru**
@@ -83,6 +84,34 @@ ssh @sshOpts "root@$ip" 'cloud-init status --wait; test -d /opt/ut2004/game && e
 Brána: vypíše `spojeni-ok`, pak `status: done` a `dir-ok`. Čekání na cloud-init může trvat
 až ~10 minut. Po 15 minutách bez `status: done` se zastav a nahlas poslední výstup.
 (`accept-new` přijme otisk klíče nového serveru při prvním připojení.)
+Vypíše-li se `status: done` **bez** `dir-ok`, pokračuj krokem 0b, ne krokem 1.
+
+### 0b. Záložní příprava serveru (jen když server nedostal cloud-config)
+
+Při prvním nasazení (2026-10-26) cloud-init doběhl za 15 s a nic nenainstaloval, protože pole
+„Cloud config" bylo při vytvoření serveru prázdné. Ověř příčinu:
+
+```powershell
+ssh @sshOpts "root@$ip" 'wc -c /var/lib/cloud/instance/user-data.txt; command -v docker; ls -ld /opt/ut2004'
+```
+Pokud má `user-data.txt` 0 bajtů a `docker` ani `/opt/ut2004` neexistují, cloud-config nedorazil.
+Jiná příčina: zastav se a nahlas výstup.
+
+Zeptej se uživatele: „Server nedostal cloud-config. Mám ho připravit ručně stejnými příkazy, jaké
+jsou v `deploy/hetzner-cloud-init.yaml`, bez mazání serveru? (Jinak ho smaž a vytvoř znovu s
+cloud-config v Hetzner Console.)" Pokračuj jen na výslovné „ano". Jinak krok zastav.
+
+```powershell
+ssh @sshOpts "root@$ip" 'DEBIAN_FRONTEND=noninteractive apt-get update > /root/prep.log 2>&1 && DEBIAN_FRONTEND=noninteractive apt-get install -y docker.io docker-compose-v2 ufw rsync curl jq p7zip-full unshield lbzip2 >> /root/prep.log 2>&1; tail -n 3 /root/prep.log; command -v docker && echo balicky-ok'
+```
+Brána: `balicky-ok`. Jinak pošli `tail -n 40 /root/prep.log` a zastav se. Seznam balíčků musí
+odpovídat `packages` v `deploy/hetzner-cloud-init.yaml`.
+
+```powershell
+ssh @sshOpts "root@$ip" 'systemctl enable --now docker && ufw default deny incoming && ufw default allow outgoing && ufw allow 22/tcp && ufw allow 7777:7778/udp && ufw allow 7787/udp && ufw --force enable && mkdir -p /opt/ut2004/game && chown -R 1000:1000 /opt/ut2004/game && echo priprava-ok'
+```
+Brána: `priprava-ok`. Pravidlo pro `22/tcp` musí být před zapnutím firewallu, pořadí neměň. Pak
+pokračuj krokem 1 (krok 2 stav serveru ještě jednou ověří).
 
 ### 1. Nahraj soubory na server
 
@@ -190,7 +219,7 @@ pak se zastav.
 ## Report uživateli (česky, stručně)
 
 1. U každého kroku 0–5: `PASS` / `FAIL` / `NOT RUN` a jedna věta. Co jsi nedosáhl, je `NOT RUN`.
-2. SHA nasazeného commitu (z kroku 1) a použitý název serveru.
+2. SHA nasazeného commitu (z kroku 1), použitý název serveru a zda se použila záložní příprava (krok 0b).
 3. Z kroku 4: zda se `.env` vytvořil nově, nebo už existoval. Že je `ADMIN_PASSWORD` nastavené,
    ověř bez výpisu hodnoty: `ssh @sshOpts "root@$ip" 'grep -c ^ADMIN_PASSWORD=. /opt/ut2004/.env'`
    (výsledek `1` znamená nastaveno).

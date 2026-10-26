@@ -1,9 +1,9 @@
 # Herní obsah na server
 
 Image obsahuje jen engine (OldUnreal patch). Mapy, textury a zvuky se dodávají zvlášť
-do `/opt/ut2004/game` na serveru. Jsou dvě cesty, obě jsou na serveru **netestované**
-(sandbox, ve kterém repo vzniklo, neviděl `files.oldunreal.net` ani Steam). Entrypoint
-je ale otestovaný na tvaru adresářů, který obě cesty vyrobí.
+do `/opt/ut2004/game` na serveru. Jsou dvě cesty. **Cesta A je ověřená na skutečném
+serveru** (viz `docs/deploy-status.md`: 13 z 13 bonus map, 5,7 GB, server s tím nastartoval),
+cesta B zůstává netestovaná. Entrypoint je otestovaný na tvaru adresářů, který obě cesty vyrobí.
 
 Server vyžaduje tyto adresáře: `Animations KarmaData Maps Music Sounds Speech StaticMeshes Textures`.
 Nekopíruj `System` (OldUnreal README: hra se pak nespustí). `Help` a `Web` už v patchi jsou
@@ -24,7 +24,7 @@ mu výslovně řekneš, že jsi souhlasil (`EPIC_TOS_ACCEPTED=yes`).
 Na serveru jako root (Ubuntu 24.04):
 
 ```sh
-apt-get update && apt-get install -y curl jq p7zip-full unshield
+apt-get update && apt-get install -y curl jq p7zip-full unshield lbzip2
 cd /root
 curl -fsSLO https://raw.githubusercontent.com/OldUnreal/FullGameInstallers/master/Linux/install-ut2004.sh
 echo "ec5f2cd6d9f76ac108487ec8cc751ddd9120771b98402521420ff2df8cb19dad  install-ut2004.sh" | sha256sum -c -
@@ -44,6 +44,10 @@ rm -rf /opt/ut2004/install    # zbytek (System, ...) už nepotřebuješ
 
 Instalátor si sám stáhne i nejnovější patch z GitHubu. Nám to nevadí, kopírujeme jen
 obsah a v kontejneru se použije patch připnutý v `Dockerfile`.
+
+`lbzip2` je nutný: bez něj instalátor spadne v kroku „Extract Latest Patch" na
+`tar (child): lbzip2: Cannot exec` (stalo se při prvním nasazení). Cloud-init v repu ho
+teď instaluje.
 
 Místo: ISO (3 GB) a rozbalený strom (6 GB) jsou na disku najednou, proto `mv` místo kopie.
 Na 20 GB disku (CPX02) to nestačí, potřebuješ aspoň 40 GB (CPX12, CX23).

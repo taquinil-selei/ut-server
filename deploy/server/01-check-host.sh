@@ -17,6 +17,7 @@ esac
 command -v docker >/dev/null && ok "$(docker --version)" || bad "docker missing"
 docker compose version >/dev/null 2>&1 && ok "$(docker compose version)" || bad "docker compose plugin missing"
 systemctl is-active --quiet docker && ok "docker daemon active" || bad "docker daemon not active"
+command -v lbzip2 >/dev/null && ok "lbzip2 installed" || bad "lbzip2 missing (the OldUnreal installer needs it for its patch)"
 
 ufw_out=$(ufw status 2>&1)
 echo "$ufw_out" | grep -q '^Status: active' && ok "ufw active" || bad "ufw not active"
