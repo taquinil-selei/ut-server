@@ -14,11 +14,12 @@ omezuje nové zákazníky, viz [docs/hosting-options.md](docs/hosting-options.md
    nejmenší dostupný typ (CX23 má být nejlevnější, může být nedostupný), lokace Nuremberg
    nebo Falkenstein, IPv4 zapnutá, SSH klíč vybraný **při vytvoření**, do „Cloud config"
    obsah [deploy/hetzner-cloud-init.yaml](deploy/hetzner-cloud-init.yaml).
-2. **Nahraj repo:**
-   ```sh
-   rsync -a --exclude game --exclude .git ./ root@<IP>:/opt/ut2004/
+2. **Nahraj soubory na server** (z PC, na Windows není rsync, použij `scp` s klíčem):
+   ```powershell
+   git clone -b claude/gifted-wozniak-ko94n7 https://github.com/taquinil-selei/ut-server.git
+   cd ut-server
+   scp -i $env:USERPROFILE\.ssh\ut2004 -r Dockerfile docker-compose.yml .env.example docker root@<IP>:/opt/ut2004/
    ```
-   (z Windows: `scp -r` po souborech nebo `git clone` na serveru).
 3. **Herní obsah** dostaneš na server jednou ze dvou cest, podrobně v [docs/game-files.md](docs/game-files.md):
    A) oficiální instalátor OldUnreal přímo na serveru (doporučeno, nic nenahráváš z domova),
    B) nahrání z tvé Steam/GOG kopie přes `scp`.

@@ -15,7 +15,8 @@ RUN curl -fsSL -o /opt/oldunreal-patch.tar.bz2 "$OLDUNREAL_URL" \
     && echo "$OLDUNREAL_SHA256" > /opt/oldunreal-patch.id
 
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# A checkout on Windows may turn line endings into CRLF, which breaks the shebang.
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh && chmod +x /usr/local/bin/entrypoint.sh
 
 VOLUME /game
 EXPOSE 7777/udp 7778/udp 7787/udp
