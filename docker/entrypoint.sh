@@ -48,11 +48,19 @@ ini_set() {
 [ -d "$GAME_DIR" ] && [ -w "$GAME_DIR" ] || die "$GAME_DIR is missing or not writable for uid $(id -u) (chown it to that uid)"
 
 # Content directories come from an owned copy of the game (see docs/game-files.md).
+# A Steam install ships a lower-case maps/; Linux needs Maps/ (OldUnreal's own
+# installer renames it the same way).
+if [ -d "$GAME_DIR/maps" ] && [ ! -e "$GAME_DIR/Maps" ]; then
+  echo "Renaming maps/ to Maps/"
+  mv "$GAME_DIR/maps" "$GAME_DIR/Maps"
+fi
 missing=()
-for d in Animations KarmaData Maps Music Prefabs Sounds Speech StaticMeshes Textures; do
+for d in Animations KarmaData Maps Music Sounds Speech StaticMeshes Textures; do
   [ -d "$GAME_DIR/$d" ] || missing+=("$d")
 done
 [ ${#missing[@]} -eq 0 ] || die "game content missing in $GAME_DIR: ${missing[*]} (see docs/game-files.md)"
+# Not on the retail media and not in the patch; OldUnreal's installer creates it empty.
+mkdir -p "$GAME_DIR/Prefabs"
 
 if [ "$(cat "$MARKER" 2>/dev/null || true)" != "$PATCH_ID" ]; then
   # A System/ copied from the original game media breaks the patched server.

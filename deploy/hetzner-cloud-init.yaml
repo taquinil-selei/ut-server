@@ -2,7 +2,7 @@
 # Host preparation for Ubuntu 24.04 (paste into "Cloud config" when creating the
 # Hetzner server). Untested end to end: docs/hosting-options.md says what was verified.
 package_update: true
-packages: [docker.io, docker-compose-v2, ufw, rsync]
+packages: [docker.io, docker-compose-v2, ufw, rsync, curl, jq, p7zip-full, unshield]
 runcmd:
   - systemctl enable --now docker
   - ufw default deny incoming
