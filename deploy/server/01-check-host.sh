@@ -31,7 +31,7 @@ avail_gb=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 [ "$avail_gb" -ge 25 ] && ok "free disk ${avail_gb} GB" || bad "free disk ${avail_gb} GB (need at least 25)"
 echo "INFO  RAM $(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo) MB, $(nproc) vCPU, $(. /etc/os-release; echo "$PRETTY_NAME")"
 
-for f in Dockerfile docker-compose.yml .env.example docker/entrypoint.sh deploy/server/02-install-content.sh deploy/server/03-configure-start.sh deploy/server/04-verify.sh; do
+for f in Dockerfile docker-compose.yml .env.example .dockerignore docker/entrypoint.sh deploy/server/02-install-content.sh deploy/server/03-configure-start.sh deploy/server/04-verify.sh; do
   [ -f "/opt/ut2004/$f" ] && ok "$f uploaded" || bad "$f missing in /opt/ut2004"
 done
 

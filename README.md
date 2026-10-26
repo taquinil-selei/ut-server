@@ -18,7 +18,7 @@ omezuje nové zákazníky, viz [docs/hosting-options.md](docs/hosting-options.md
    ```powershell
    git clone -b claude/gifted-wozniak-ko94n7 https://github.com/taquinil-selei/ut-server.git
    cd ut-server
-   scp -i $env:USERPROFILE\.ssh\ut2004 -r Dockerfile docker-compose.yml .env.example docker root@<IP>:/opt/ut2004/
+   scp -i $env:USERPROFILE\.ssh\ut2004 -r Dockerfile docker-compose.yml .env.example .dockerignore docker deploy root@<IP>:/opt/ut2004/
    ```
 3. **Herní obsah** dostaneš na server jednou ze dvou cest, podrobně v [docs/game-files.md](docs/game-files.md):
    A) oficiální instalátor OldUnreal přímo na serveru (doporučeno, nic nenahráváš z domova),
@@ -28,6 +28,8 @@ omezuje nové zákazníky, viz [docs/hosting-options.md](docs/hosting-options.md
    cd /opt/ut2004 && cp .env.example .env && nano .env   # jméno, ADMIN_PASSWORD
    docker compose up -d --build && docker compose logs -f
    ```
+   Kroky 2 až 5 lze místo ručního psaní předat agentovi na tvém PC:
+   [docs/handoff-deploy.md](docs/handoff-deploy.md) a skripty v `deploy/server/`.
 5. **Ověř:** `ss -ulpn | grep ucc` ukáže skutečné UDP porty, klient se připojí přes `open <IP>:7777`,
    seznam serverů a CD key: [docs/hosting-options.md](docs/hosting-options.md#seznam-serverů-master-server).
 

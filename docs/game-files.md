@@ -17,6 +17,10 @@ případně záložně z archive.org. Platí
 [Epic Games ToS](https://legal.epicgames.com/en-US/epicgames/tos) (odkaz z README
 instalátoru). Steam ani GOG k tomu nepotřebuješ. Vznikne kompletní strom se správným `Maps`.
 
+Instalátor se při spuštění zeptá, zda souhlasíš s Epic Games Terms of Service (odpověď `y`).
+Skript `deploy/server/02-install-content.sh` na tuto otázku odpoví za tebe jen tehdy, když
+mu výslovně řekneš, že jsi souhlasil (`EPIC_TOS_ACCEPTED=yes`).
+
 Na serveru jako root (Ubuntu 24.04):
 
 ```sh
