@@ -36,7 +36,8 @@ je bezpečná nadmnožina.
 |---|---|---|---|---|---|
 | **Railway** | ne (jen odchozí) | n/a | n/a | n/a | **nepoužitelné** |
 | **Hetzner Cloud** CX23 | ano, plná síť | 5,49 € + 0,50 € IPv4, 20 TB provozu | vysoká | nízká | **doporučeno, pokud jde objednat** |
-| Hetzner CPX12 / CPX22 | ano | ~11,49 € / ~19,49 € bez IPv4 (CPX12 nepotvrzeno) | vysoká | nízká | záloha uvnitř Hetzneru |
+| **Hetzner CPX12** (1 vCPU, 2 GB, 40 GB) | ano | 11,99 € měsíčně podle konzole | vysoká | nízká | **doporučeno, když CX23 chybí** |
+| Hetzner CPX02 (1 vCPU, 1 GB, 20 GB) | ano | 6,49 € měsíčně podle konzole | vysoká | nízká | jde, ale 20 GB disku a 1 GB RAM je těsné |
 | **Fly.io** | ano, s dedikovanou IPv4 | ~2 $ za IPv4 + stroj, přesně neověřeno | dobrá | vyšší | druhá volba |
 | **Oracle Always Free** | ano | zdarma | nízká | střední | jen na pokusy |
 | Správce herních serverů | ano | neověřeno | podle firmy | nejnižší | záloha, pokud nechceš spravovat nic |
@@ -68,8 +69,12 @@ nevím, a veřejný katalog o tom nic neříká. Postup:
 3. Objednávej **nejmenší dostupný typ**. Hetzner doporučuje novým zákazníkům malou první
    objednávku. Může chtít doklad totožnosti nebo předplatbu vlastní kartou, bez VPN a
    s kompletními údaji, první fakturu zaplať hned.
-4. Pokud zůstane jen CPX: CPX12 (1 vCPU, 2 GB, ~11,49 €, v EU od 2026-07-07 podle jednoho
-   blogu) stačí na lehký server, CPX22 je ~19,49 €. Před potvrzením si přečti cenu na stránce.
+4. Pokud zůstane jen CPX (v konzoli 2026-10-26 byly vidět CPX02 6,49 €, CPX12 11,99 € a
+   CPX22 19,99 €, CX nebyly v seznamu vůbec): vyber **CPX12**. Má 2 GB RAM a 40 GB disku, což
+   pohodlně pojme hru (~6 GB), Docker i dočasné soubory instalátoru. CPX02 je o 5,50 € levnější,
+   ale 20 GB disku nestačí na cestu A z `docs/game-files.md` a 1 GB RAM s Dockerem jsem nezměřil.
+   Ceny v tabulce konzole nejspíš zahrnují IPv4 (sedí 11,49 + 0,50), potvrď v souhrnu před objednávkou.
+   Starší CPX11, CPX21 a vyšší jsou dražší za méně, nevybírej je.
 
 **Parametry a cena (CX23).** 2 sdílené vCPU, 4 GB RAM, 40 GB, 20 TB provozu v EU.
 5,49 € + 0,50 € za IPv4 = 5,99 € měsíčně bez DPH (~7,25 € s českou DPH, firma s platným

@@ -33,13 +33,16 @@ a teprve pak pokračuj.
 ```sh
 bash install-ut2004.sh -d /opt/ut2004/install --ui-mode none --application-entry skip --desktop-shortcut skip
 ls /opt/ut2004/install        # očekávej Animations, KarmaData, Maps, Music, Sounds, ...
-cd /opt/ut2004/install && cp -a Animations KarmaData Maps Music Sounds Speech StaticMeshes Textures /opt/ut2004/game/
+cd /opt/ut2004/install && mv Animations KarmaData Maps Music Sounds Speech StaticMeshes Textures /opt/ut2004/game/
 chown -R 1000:1000 /opt/ut2004/game
-rm -rf /opt/ut2004/install    # uvolní ~6 GB, disk má 40 GB
+rm -rf /opt/ut2004/install    # zbytek (System, ...) už nepotřebuješ
 ```
 
 Instalátor si sám stáhne i nejnovější patch z GitHubu. Nám to nevadí, kopírujeme jen
 obsah a v kontejneru se použije patch připnutý v `Dockerfile`.
+
+Místo: ISO (3 GB) a rozbalený strom (6 GB) jsou na disku najednou, proto `mv` místo kopie.
+Na 20 GB disku (CPX02) to nestačí, potřebuješ aspoň 40 GB (CPX12, CX23).
 
 Riziko: pokud je `files.oldunreal.net` nedostupný a selže i záloha na archive.org,
 použij cestu B.
