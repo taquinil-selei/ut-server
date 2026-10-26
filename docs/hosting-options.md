@@ -174,7 +174,7 @@ issues #378, #171, #91), takže se nespoléhej na GUI. Použij `pip install pyut
 - **Patch 3374 je pořád „preview"** (Preview 23, poslední před release candidate).
   Podle hostingu GameHostBros se hráči na čistém 3369 k serveru 3374 připojí, ale
   oficiálně jsem to nepotvrdil, a preview verze se může rozbít. Uživatel se 2026-10-26 připojil
-  ze svého Steam klienta (verzi jsem nezjišťoval, Steam podle zdrojů dodává 3369) a funguje to. Odkaz na patch je v `Dockerfile` připnutý
+  ze své GOG kopie (číslo verze jsem nezjišťoval) a funguje to. Odkaz na patch je v `Dockerfile` připnutý
   i s kontrolním součtem, takže se nezmění pod rukama.
 - **Servery s AntiTCC** vyžadovaly aktualizaci kompatibilní s 3374 (poznámka k Preview 9).
 - **NAT a Docker bridge:** OldUnreal issue #90 (otevřené, reprodukované na 3374p17 v březnu 2026):

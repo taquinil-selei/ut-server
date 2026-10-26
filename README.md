@@ -38,7 +38,7 @@ omezuje nové zákazníky, viz [docs/hosting-options.md](docs/hosting-options.md
 Ověřeno na skutečném serveru (Hetzner CPX12, Ubuntu 24.04, podle `docs/deploy-status.md`): sestavení
 image, instalátor OldUnreal (po doinstalování `lbzip2`), 13 z 13 bonus map, server běží, `04-verify.sh`
 skončil `RESULT: PASS`, UDP 7777, 7778, 7787 poslouchají a TCP spojení na 6 master serverů je navázáno.
-Připojení ze hry přes IP funguje (potvrdil uživatel 2026-10-26 ze svého Steam klienta).
+Připojení ze hry přes IP funguje (potvrdil uživatel 2026-10-26 ze svého GOG klienta, číslo verze nezjištěno).
 
 Ověřeno lokálně (Debian bookworm, x86_64): patch 3374 se stáhne a odpovídá pinovanému
 sha256, server se bez displeje spustí a načte všechny enginové balíčky, entrypoint
