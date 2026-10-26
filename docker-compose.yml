@@ -1,0 +1,13 @@
+services:
+  ut2004:
+    build: .
+    image: ut2004-server:local
+    restart: unless-stopped
+    # Host networking keeps UDP source addresses intact; the server answers
+    # master-server and browser queries from the same IP the client contacted.
+    network_mode: host
+    user: "1000:1000"
+    env_file: .env
+    volumes:
+      - ./game:/game
+    stop_grace_period: 15s

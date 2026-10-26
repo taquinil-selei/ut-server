@@ -1,0 +1,15 @@
+#cloud-config
+# Host preparation for Ubuntu 24.04 (paste into "Cloud config" when creating the
+# Hetzner server). Untested end to end: docs/hosting-options.md says what was verified.
+package_update: true
+packages: [docker.io, docker-compose-v2, ufw, rsync]
+runcmd:
+  - systemctl enable --now docker
+  - ufw default deny incoming
+  - ufw default allow outgoing
+  - ufw allow 22/tcp
+  - ufw allow 7777:7778/udp
+  - ufw allow 7787/udp
+  - ufw --force enable
+  - mkdir -p /opt/ut2004/game
+  - chown -R 1000:1000 /opt/ut2004/game
